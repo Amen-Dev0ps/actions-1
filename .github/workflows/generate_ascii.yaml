@@ -3,17 +3,47 @@ name: Generate ASCII Artwork
 on: push
 
 jobs:
-    acii_job:
+    build_job_1:
         runs-on: ubuntu-latest
+
         steps:
-        - name: Checkout repo
-          uses: actions/checkout@v6
+        - name: Install Cowsay
+          run: sudo apt-get install cowsay -y
 
-        - name: List repo Files
-          run: ls -ltra
+        - name: Execute Cowsay Cmd 
+          run: cowsay -f dragon "Run for cover, I am a DRAGON... RAWR" >> dragon.txt
 
-        - name: Executing Shell Script
-          run: |
-            cd .github/workflows
-            chmod +x ascii-script.sh
-            ./ascii-script.sh
+        - name: Upload Dragon generated file
+          uses: actions/upload-artifact@v7
+          with:
+            name: dragon.txt
+            path: .github/workflows/dragon.txt
+
+    test_job_2:
+        needs: build_job_1
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Download Dragon generated file
+          uses: actions/download-artifact@v8
+          with:
+            name: dragon.txt
+
+        - name: Test File Exists
+          run: grep -i "dragon" dragon.txt
+
+    deploy_job_3:
+        needs: [test_job_2]
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Download Dragon generated file
+          uses: actions/download-artifact@v8
+          with:
+            name: dragon.txt
+
+        - name: Read file
+          run: cat dragon.txt
+
+        - name: Deploy
+          run: echo Deploying ... .. .
