@@ -12,7 +12,7 @@ jobs:
         - name: List & Read file
           run: |
              echo "My Github Actions job"
-             ls-ltra
+             ls
              cat README.md
             
         - name: Generate ASCII Artwork
