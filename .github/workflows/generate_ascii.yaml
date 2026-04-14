@@ -22,6 +22,9 @@ jobs:
     test_job_2:
         needs: build_job_1
         runs-on: ubuntu-latest
+        concurrency: 
+            group: test-deploy
+            cancel-in-progress: true
 
         steps:
         - name: Download Dragon generated file
